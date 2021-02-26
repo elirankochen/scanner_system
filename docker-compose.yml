@@ -1,0 +1,20 @@
+version: '2.2'
+services:
+    ingest:
+        build: ingest
+    process:
+        build: process
+    status:
+        build: status
+
+    nginx:
+        container_name: nginx
+        build: nginx
+        ports:
+            - 80:80
+        depends_on:
+           - ingest
+    redis:
+        image: redis:alpine
+
+
