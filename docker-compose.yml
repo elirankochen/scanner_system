@@ -6,6 +6,8 @@ services:
         build: process
     status:
         build: status
+        ports:
+            - "5002:5002"
 
     nginx:
         container_name: nginx
@@ -16,5 +18,4 @@ services:
            - ingest
     redis:
         image: redis:alpine
-
 
