@@ -41,8 +41,8 @@ def get_scans_status(scans_id):
 
 
 if __name__ == '__main__':
-scans_id_for_status = init_scanner_system()
-while True:
-    sleep(5 - time() % 5)
-    get_scans_status(scans_id_for_status)
-    print('----------------------------------------------------------')
+    scans_id_for_status = init_scanner_system()
+    while True:
+        sleep(5 - time() % 5)
+        get_scans_status(scans_id_for_status)
+        print('----------------------------------------------------------')
