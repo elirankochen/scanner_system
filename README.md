@@ -17,8 +17,8 @@ Github link - https://github.com/elirankochen/scanner_system.
 
 Install instructions - git clone git@github.com:elirankochen/scanner_system.git
 
-cd scanner_system 
-docker-compose up --build -d --scale ingest=2 (for 2 instances of ingest).
+cd scanner_system
+docker-compose up --build -d --scale ingest=2 (for 2 instances of ingest)
 (docker installation - https://docs.docker.com/docker-for-mac/install/)
 
 
