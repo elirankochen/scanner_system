@@ -8,15 +8,6 @@ app = Flask(__name__)
 redis = redis.Redis(host='redis', port=6379)
 
 
-class StatusEnum:
-    ACCEPTED = {'order': 0, 'slug': 'Accepted',
-                'description': 'the request for a new scan has been received and is pending processing'}
-    RUNNING = {'order': 1, 'slug': 'Running', 'description': 'the scan is currently running'}
-    ERROR = {'order': 2, 'slug': 'Error', 'description': 'an error occurred during the scan (e.g. bad domain name)'}
-    COMPLETE = {'order': 3, 'slug': 'Complete', 'description': 'the scan was completed successfully'}
-    NOT_FOUND = {'order': 4, 'slug': 'Not found', 'description': 'the scan-id could not be found'}
-
-
 @app.route('/delete_items_redis')
 def delete_items_redis():
     redis.delete('scan_items')
@@ -32,38 +23,38 @@ def get_items():
     return str(len(items)), 200
 
 
+@app.route('/add_consecutive_scans/', methods=['POST'])
+def add_consecutive_scans():
+    scan_id = IngestLogic.generate_scan_id()
+    target_domain = request.form.get('target_domain')
+    scan_services_id = request.form.get('scan_services_id')
+    for scan_service_id in scan_services_id:
+        IngestLogic.add_scan(scan_id, scan_service_id, target_domain)
+    return scan_id, 200
+
+
 @app.route('/add_scan/', methods=['POST'])
 def add_scan():
-    scan_id = str(uuid.uuid4())
+    scan_id = IngestLogic.generate_scan_id()
     target_domain = request.form.get('target_domain')
     scan_service_id = request.form.get('scan_service_id')
-    scan_item = {'scan_id': scan_id, 'scan_service_id': scan_service_id, 'target_domain': target_domain}
-    redis.rpush('scan_items', json.dumps(scan_item))
-    return scan_item, 200
+    IngestLogic.add_scan(scan_id, scan_service_id, target_domain)
+    return scan_id, 200
 
 
-@app.route('/scan_status/<scan_id>', methods=['GET'])
-def get_scan_status(scan_id):
-    status = None
-    pending_scans_items = redis.lrange('scan_items', 0, -1)
-    pending_scans_ids = [json.loads(scan_item)['scan_id'] for scan_item in pending_scans_items]
+class IngestLogic:
 
-    if scan_id in pending_scans_ids:
-        status = StatusEnum.ACCEPTED
+    @staticmethod
+    def add_scan(scan_id, scan_service_id, target_domain):
+        scan_item = {'scan_id': scan_id, 'scan_service_id': scan_service_id, 'target_domain': target_domain}
+        redis.rpush('scan_items', json.dumps(scan_item))
 
-    elif redis.sismember('running_scans', scan_id):
-        status = StatusEnum.RUNNING
+    def delete_scan(self):
+        pass
 
-    elif redis.sismember('success_tasks', scan_id):
-        status = StatusEnum.COMPLETE
-
-    elif redis.sismember('failed_tasks', scan_id):
-        status = StatusEnum.ERROR
-
-    if not status:
-        status = StatusEnum.NOT_FOUND
-
-    return status, 200
+    @staticmethod
+    def generate_scan_id():
+        return str(uuid.uuid4())
 
 
 if __name__ == '__main__':
