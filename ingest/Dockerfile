@@ -10,6 +10,7 @@ WORKDIR /ingest
 RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 
 COPY requirements.txt .
+COPY ingest_logic.py /ingest
 
 RUN pip install -r requirements.txt
 
