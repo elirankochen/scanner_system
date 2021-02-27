@@ -10,6 +10,7 @@ WORKDIR /status
 RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 
 COPY requirements.txt .
+COPY status_logic.py /status
 
 RUN pip install -r requirements.txt
 
