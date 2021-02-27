@@ -5,7 +5,7 @@ EXPOSE 5001
 
 WORKDIR /process
 
-#RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
+RUN apk update && apk add postgresql-dev gcc python3-dev musl-dev
 
 COPY requirements.txt .
 
