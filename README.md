@@ -15,14 +15,15 @@ Redis is the DB(in memory DB and also persistence), redis works well as a messag
 
 Github link - https://github.com/elirankochen/scanner_system.
 
-Install instructions - git clone git@github.com:elirankochen/scanner_system.git
-cd scanner_system
-docker-compose up --build -d --scale ingest=2 (for 2 instances of ingest)
-(docker installation - https://docs.docker.com/docker-for-mac/install/)
+Install instructions - 
+git clone git@github.com:elirankochen/scanner_system.git.
+cd scanner_system.
+docker-compose up --build -d --scale ingest=2 (for 2 instances of ingest).
+(docker installation - https://docs.docker.com/docker-for-mac/install/).
 
 In your virtual environments - 
-pip install requests 
-python init_scanner_system.py
+pip install requests.
+python init_scanner_system.py.
 
 Future improvements - 
 1. Retry mechanism - in case some scan failed we will be able to try it again.
